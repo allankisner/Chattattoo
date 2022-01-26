@@ -37,7 +37,7 @@ function Titulo(props) {
 
 export default function PaginaInicial() {
   // const username = 'allankisner';
- const [username, setUsername] = React.useState('allankisner');
+ const [username, setUsername] = React.useState();
  const route = useRouter();
  
   return (
@@ -98,6 +98,8 @@ export default function PaginaInicial() {
             }}
             />
         */}
+
+        
 
             <TextField
             value={username}
