@@ -82,7 +82,7 @@ export default function PaginaInicial() {
             }}
           >
             <Titulo tag="h1">CHATATTOO!</Titulo>
-            <Text variant="body3" styleSheet={{ marginBottom: '32px', color: appConfig.theme.colors.neutrals[300] }}>
+            <Text variant="body3" styleSheet={{ marginBottom: '32px', color: appConfig.theme.colors.neutrals[200] }}>
               {appConfig.name}
             </Text>
 

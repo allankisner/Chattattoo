@@ -1,11 +1,27 @@
 import { Box, Text, TextField, Image, Button } from '@skynexui/components';
-import React from 'react';
+import React, { useState } from 'react';
 import appConfig from '../config.json';
 
 export default function ChatPage() {
-    // Sua lógica vai aqui
+    // lógica 
+    const [msg, setMsg] = React.useState('');
+    const [listMsg, setListMsg] = React.useState([]);
 
-    // ./Sua lógica vai aqui
+    function handleNewMsg(newMsg) {
+        const msg = {
+            id: listMsg.length + 1,
+            de: 'allankisner',
+            texto: newMsg,
+        };
+
+        setListMsg([
+            msg,
+            ...listMsg
+        ]);
+        setMsg('');
+    }
+
+    // ./lógica 
     return (
         <Box
             styleSheet={{
@@ -44,7 +60,14 @@ export default function ChatPage() {
                     }}
                 >
 
-                    {/* <MessageList mensagens={[]} /> */}
+                    <MessageList mesages={listMsg} />
+                   {/* {listMsg.map((newMsg) => {
+                        return (
+                            <li key={newMsg.id}>
+                                {newMsg.de} :{newMsg.texto};
+                            </li>
+                        )
+                    })} */}
 
                     <Box
                         as="form"
@@ -54,6 +77,19 @@ export default function ChatPage() {
                         }}
                     >
                         <TextField
+                            value={msg}
+                            onChange={(event) => {
+                                console.log(event)
+                                const infoMsg = event.target.value;
+                                setMsg(infoMsg);
+                            }}
+                            onKeyPress={(event) => {
+                                if (event.key === 'Enter') {
+                                    event.preventDefault();
+
+                                    handleNewMsg(msg);
+                                }
+                            }}
                             placeholder="Insira sua mensagem aqui..."
                             type="textarea"
                             styleSheet={{
@@ -92,8 +128,9 @@ function Header() {
     )
 }
 
+
 function MessageList(props) {
-    console.log('MessageList', props);
+    console.log(props);
     return (
         <Box
             tag="ul"
@@ -106,50 +143,53 @@ function MessageList(props) {
                 marginBottom: '16px',
             }}
         >
-
-            <Text
-                key={mensagem.id}
-                tag="li"
-                styleSheet={{
-                    borderRadius: '5px',
-                    padding: '6px',
-                    marginBottom: '12px',
-                    hover: {
-                        backgroundColor: appConfig.theme.colors.neutrals[700],
-                    }
-                }}
-            >
-                <Box
-                    styleSheet={{
-                        marginBottom: '8px',
-                    }}
-                >
-                    <Image
-                        styleSheet={{
-                            width: '20px',
-                            height: '20px',
-                            borderRadius: '50%',
-                            display: 'inline-block',
-                            marginRight: '8px',
-                        }}
-                        src={`https://github.com/vanessametonini.png`}
-                    />
-                    <Text tag="strong">
-                        {mensagem.de}
-                    </Text>
+            {props.mesages.map((msg) => {
+                return (
                     <Text
+                        key={msg.id}
+                        tag="li"
                         styleSheet={{
-                            fontSize: '10px',
-                            marginLeft: '8px',
-                            color: appConfig.theme.colors.neutrals[300],
+                            borderRadius: '5px',
+                            padding: '6px',
+                            marginBottom: '12px',
+                            hover: {
+                                backgroundColor: appConfig.theme.colors.neutrals[700],
+                            }
                         }}
-                        tag="span"
                     >
-                        {(new Date().toLocaleDateString())}
+                        <Box
+                            styleSheet={{
+                                marginBottom: '8px',
+                            }}
+                        >
+                            <Image
+                                styleSheet={{
+                                    width: '20px',
+                                    height: '20px',
+                                    borderRadius: '50%',
+                                    display: 'inline-block',
+                                    marginRight: '8px',
+                                }}
+                                src={`https://media.istockphoto.com/vectors/panda-logo-vector-id1005372264?s=612x612`}
+                            />
+                            <Text tag="strong">
+                                {msg.de}
+                            </Text>
+                            <Text
+                                styleSheet={{
+                                    fontSize: '10px',
+                                    marginLeft: '8px',
+                                    color: appConfig.theme.colors.neutrals[300],
+                                }}
+                                tag="span"
+                            >
+                                {(new Date().toLocaleDateString())}
+                            </Text>
+                        </Box>
+                      {msg.texto} 
                     </Text>
-                </Box>
-                {mensagem.texto}
-            </Text>
+                );
+            })}
         </Box>
     )
 }
