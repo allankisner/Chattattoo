@@ -1,18 +1,46 @@
 import { Box, Text, TextField, Image, Button } from '@skynexui/components';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import React, { useState } from 'react';
 import appConfig from '../config.json';
+
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzMyMzU5NSwiZXhwIjoxOTU4ODk5NTk1fQ.7uTFPNV2Zq3CbSRfeJaY1AsjB7HzN_hTK_ZNJW2zr_0'
+const SUPABASE_URL = 'https://pisqbsovqpxzgcafmrfz.supabase.co'
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
 export default function ChatPage() {
     // lógica 
     const [msg, setMsg] = React.useState('');
     const [listMsg, setListMsg] = React.useState([]);
 
+    React.useEffect(() => {
+        supabaseClient
+            .from('mensagens')
+            .select(('*'))
+            .then(({ data }) => {
+                console.log('Dados da Consulta', data)
+                setListMsg(data)
+            });
+    }, []);
+
     function handleNewMsg(newMsg) {
         const msg = {
-            id: listMsg.length + 1,
+            // id: listMsg.length + 1,
             de: 'allankisner',
             texto: newMsg,
         };
+
+        supabaseClient
+            .from('mensagens')
+            .insert([
+                msg
+            ])
+            .then(({data})=>{
+                console.log('Criando Mensagem: ', data)
+                setListMsg([
+                    data[0],
+                    ...listMsg
+                ])
+            })
 
         setListMsg([
             msg,
@@ -61,7 +89,7 @@ export default function ChatPage() {
                 >
 
                     <MessageList mesages={listMsg} />
-                   {/* {listMsg.map((newMsg) => {
+                    {/* {listMsg.map((newMsg) => {
                         return (
                             <li key={newMsg.id}>
                                 {newMsg.de} :{newMsg.texto};
@@ -186,7 +214,7 @@ function MessageList(props) {
                                 {(new Date().toLocaleDateString())}
                             </Text>
                         </Box>
-                      {msg.texto} 
+                        {msg.texto}
                     </Text>
                 );
             })}
